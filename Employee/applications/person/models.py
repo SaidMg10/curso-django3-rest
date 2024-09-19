@@ -1,6 +1,18 @@
 from django.db import models
+from django_quill.fields import QuillField
+
 #
 from applications.department.models import Departamento
+
+class Habilidades(models.Model):
+    habilidad = models.CharField('Habilidad', max_length=50)
+
+    class Meta:
+        verbose_name = 'Habilidad'
+        verbose_name_plural = 'Habilidades Empleados'
+    
+    def __str__(self):
+        return str(self.id) + '-' + self.habilidad 
 
 # Create your models here.
 class Empleado(models.Model):
@@ -16,8 +28,16 @@ class Empleado(models.Model):
     first_name = models.CharField('Nombres', max_length=60)
     last_name = models.CharField('Apellidos', max_length=60)
     job = models.CharField('Trabajos', max_length=1, choices=job_choices)
-    Departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
-    # image = models.ImageField('imagen', upload_to=None, height_field=None, width_field=None, max_length=None)
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='empleado', blank=True, null=True)
+    habilidades = models.ManyToManyField(Habilidades)
+    hoja_vida = QuillField()
+
+    class Meta:
+        verbose_name = 'Person'
+        verbose_name_plural = 'Persons'
+        ordering= ['-first_name']
+        unique_together = ('first_name', 'departamento')
 
     def __str__(self):
-        return str(self.id) + '-' + self.first_name + '-' + self.last_name # + '-' + self.job + '-' + str(self.Departamento)
+        return str(self.id) + '-' + self.first_name + '-' + self.last_name #+ '-' + self.job + '-' + str(self.departamento)
