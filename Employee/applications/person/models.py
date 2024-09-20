@@ -27,7 +27,7 @@ class Empleado(models.Model):
 
     first_name = models.CharField('Nombres', max_length=60)
     last_name = models.CharField('Apellidos', max_length=60)
-    job = models.CharField('Trabajos', max_length=1, choices=job_choices)
+    job = models.CharField('trabajos', max_length=1, choices=job_choices)
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='empleado', blank=True, null=True)
     habilidades = models.ManyToManyField(Habilidades)
@@ -36,7 +36,7 @@ class Empleado(models.Model):
     class Meta:
         verbose_name = 'Person'
         verbose_name_plural = 'Persons'
-        ordering= ['-first_name']
+        ordering= ['-first_name', 'last_name']
         unique_together = ('first_name', 'departamento')
 
     def __str__(self):
